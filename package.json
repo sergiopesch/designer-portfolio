@@ -1,0 +1,21 @@
+{
+  "name": "dear-designer-portfolio",
+  "version": "1.0.0",
+  "description": "A satirical designer portfolio with scroll-driven SVG animations.",
+  "main": "index.html",
+  "scripts": {
+    "start": "npx serve ."
+  },
+  "keywords": [
+    "portfolio",
+    "satire",
+    "svg",
+    "animation"
+  ],
+  "author": "Ricky Gervais (Spiritually)",
+  "license": "MIT",
+  "devDependencies": {
+    "serve": "^14.2.0"
+  }
+}
+
