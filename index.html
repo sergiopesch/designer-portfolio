@@ -20,6 +20,10 @@
             background-color: var(--sky);
             /* Hide standard scrollbar but allow scrolling */
             overflow-x: hidden;
+            /* Improve text rendering */
+            -webkit-font-smoothing: antialiased;
+            -moz-osx-font-smoothing: grayscale;
+            text-rendering: optimizeLegibility;
         }
 
         /* We need a tall body to scroll through */
@@ -39,6 +43,13 @@
             height: 100dvh;
             z-index: 1;
             overflow: hidden;
+            /* Promote to GPU layer */
+            transform: translateZ(0);
+        }
+
+        /* SVG Optimization */
+        svg {
+            shape-rendering: geometricPrecision;
         }
 
         /* Paper Cutout Aesthetic */
@@ -87,12 +98,13 @@
                 position: absolute;
                 left: 50% !important;
                 transform: translateX(-50%) translateY(20px) rotate(0deg) !important;
-                bottom: 5% !important;
+                bottom: 12% !important; /* Increased bottom margin for safety */
                 top: auto !important;
-                width: 90% !important;
+                width: 85% !important; /* Slightly narrower to ensure side margins */
                 max-width: 400px;
                 right: auto !important;
                 z-index: 60; /* Above texture */
+                padding: 1.5rem !important; /* Ensure inner spacing */
             }
             .comic-box.active {
                 transform: translateX(-50%) translateY(0) rotate(0deg) !important;
@@ -226,14 +238,14 @@
             <!-- ============================================ -->
             <!-- 1. THE SWING (The Infinite Revision Cycle)   -->
             <!-- ============================================ -->
-            <g id="area-swing" transform="translate(250, 550)">
+            <g id="area-swing" transform="translate(250, 550)" style="will-change: transform;">
                 <!-- Frame -->
                 <line x1="-80" y1="0" x2="0" y2="-400" stroke="black" stroke-width="8" stroke-linecap="round"/>
                 <line x1="80" y1="0" x2="0" y2="-400" stroke="black" stroke-width="8" stroke-linecap="round"/>
                 <line x1="-80" y1="0" x2="80" y2="0" stroke="none" /> <!-- Base -->
                 
                 <!-- Animated Swing -->
-                <g style="animation: swingMotion 3s infinite ease-in-out; transform-origin: 0 -400px;">
+                <g style="animation: swingMotion 3s infinite ease-in-out; transform-origin: 0 -400px; will-change: transform;">
                     <line x1="-20" y1="-400" x2="-20" y2="-50" stroke="black" stroke-width="3"/>
                     <line x1="20" y1="-400" x2="20" y2="-50" stroke="black" stroke-width="3"/>
                     <rect x="-30" y="-50" width="60" height="10" fill="#b91c1c" stroke="black" stroke-width="3"/>
@@ -264,10 +276,10 @@
             <!-- ============================================ -->
             <!-- 2. THE SEESAW (Budget vs Reality)            -->
             <!-- ============================================ -->
-            <g id="area-seesaw" transform="translate(600, 650)">
+            <g id="area-seesaw" transform="translate(600, 650)" style="will-change: transform;">
                 <path d="M-20 0 L0 -40 L20 0 Z" fill="#475569" stroke="black" stroke-width="3"/>
                 
-                <g style="animation: seesawMotion 4s infinite ease-in-out;">
+                <g style="animation: seesawMotion 4s infinite ease-in-out; will-change: transform;">
                     <!-- Plank -->
                     <rect x="-150" y="-45" width="300" height="10" fill="#8b5cf6" stroke="black" stroke-width="3"/>
                     
@@ -303,13 +315,13 @@
             <!-- ============================================ -->
             <!-- 3. THE TRAMPOLINE (Jumping to Conclusions)   -->
             <!-- ============================================ -->
-            <g id="area-trampoline" transform="translate(950, 600)">
+            <g id="area-trampoline" transform="translate(950, 600)" style="will-change: transform;">
                 <ellipse cx="0" cy="50" rx="80" ry="20" fill="#1e293b" stroke="black" stroke-width="3"/>
                 <line x1="-60" y1="50" x2="-70" y2="100" stroke="black" stroke-width="4"/>
                 <line x1="60" y1="50" x2="70" y2="100" stroke="black" stroke-width="4"/>
 
                 <!-- Character -->
-                <g style="animation: jumpSouthPark 1.5s infinite ease-in-out;">
+                <g style="animation: jumpSouthPark 1.5s infinite ease-in-out; will-change: transform;">
                     <rect x="-20" y="-40" width="40" height="50" fill="#f97316" stroke="black" stroke-width="3"/>
                     <text x="0" y="0" text-anchor="middle" font-size="10" font-family="Space Grotesk">Jr. Dev</text>
                     <!-- Head -->
@@ -327,7 +339,7 @@
             <!-- ============================================ -->
             <!-- 4. THE SLIDE (The Deployment Pipeline)       -->
             <!-- ============================================ -->
-            <g id="area-slide" transform="translate(100, 400)">
+            <g id="area-slide" transform="translate(100, 400)" style="will-change: transform;">
                 <!-- Ladder -->
                 <line x1="-20" y1="200" x2="-20" y2="0" stroke="black" stroke-width="5"/>
                 <line x1="-50" y1="200" x2="-50" y2="0" stroke="black" stroke-width="5"/>
@@ -336,7 +348,7 @@
                 <path d="M-20 0 Q100 0 120 50 L200 250" fill="none" stroke="black" stroke-width="3" stroke-dasharray="10,10" transform="translate(0, -15)"/>
 
                 <!-- Sliding Character -->
-                <g style="animation: slideSouthPark 3s infinite linear;">
+                <g style="animation: slideSouthPark 3s infinite linear; will-change: transform, opacity;">
                      <g transform="scale(0.7)">
                         <rect x="-20" y="-20" width="40" height="40" fill="#a8a29e" stroke="black" stroke-width="3"/>
                         <circle cx="0" cy="-35" r="20" fill="#fca5a5" stroke="black" stroke-width="3"/>
@@ -543,10 +555,10 @@
         // We center the action horizontally and give enough vertical buffer
         const mobileViews = [
              { id: 'home', vb: [0, 0, 1200, 1000], el: null }, // Zoom out height
-             { id: 'swing', vb: [0, 50, 500, 700], el: document.getElementById('content-swing') }, // Wider/Taller to center swing
-             { id: 'seesaw', vb: [350, 500, 600, 600], el: document.getElementById('content-seesaw') },
-             { id: 'trampoline', vb: [750, 450, 450, 450], el: document.getElementById('content-trampoline') },
-             { id: 'slide', vb: [-50, 250, 500, 500], el: document.getElementById('content-slide') }
+             { id: 'swing', vb: [-50, 0, 600, 800], el: document.getElementById('content-swing') }, // Wider/Taller to center swing
+             { id: 'seesaw', vb: [300, 450, 700, 700], el: document.getElementById('content-seesaw') },
+             { id: 'trampoline', vb: [700, 400, 550, 550], el: document.getElementById('content-trampoline') },
+             { id: 'slide', vb: [-100, 200, 600, 600], el: document.getElementById('content-slide') }
         ];
 
         let currentViews = window.innerWidth < 768 ? mobileViews : desktopViews;
